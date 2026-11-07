@@ -1,24 +1,4 @@
 <?php
-/**
- * ============================================================================
- *  HIKEPASS - MODEL HikePass (PERTEMUAN 6 - OOP, PERTEMUAN 7 - MVC)
- * ============================================================================
- *  Object = Data (Properties) + Behavior (Methods).
- *
- *  Model bertanggung jawab mengelola data aplikasi. Pada arsitektur MVC,
- *  file ini TIDAK boleh menampilkan HTML dan TIDAK boleh membaca $_GET.
- *
- *  TASK 01 : Class berhasil dibuat, property ditentukan, object di-instansiasi.
- *  TASK 02 : Property (data) & Method (perilaku) ditambahkan.
- *  TASK 03 : Object dipakai untuk menghasilkan data yang ditampilkan View.
- *
- *  PEMAKAIAN:
- *      require_once __DIR__ . '/php/app/models/HikePass.php';
- *      $pass = new HikePass(require __DIR__ . '/php/includes/data.php');
- *      $pass->getProfile();
- *      $pass->getPrograms();
- * ============================================================================
- */
 
 require_once __DIR__ . '/../../includes/functions.php';
 
