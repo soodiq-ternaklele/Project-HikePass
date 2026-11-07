@@ -1,32 +1,10 @@
 ﻿<?php
-/**
- * ============================================================================
- *  HIKEPASS - VIEW HOME (PERTEMUAN 7 - MVC)
- * ============================================================================
- *  View tidak menyimpan logika bisnis: seluruh data dikirim oleh Controller
- *  (php/index.php -> HikePassController -> HikePass -> view ini).
- *
- *  PENJAGA AKSES LANGSUNG:
- *  Bila file ini dibuka langsung di browser (mis. .../php/app/views/home.php
- *  tanpa melalui Controller), blok di bawah otomatis memuat helper e() dan
- *  data dari Model sehingga halaman tetap ter-render utuh — bukan
- *  "Fatal error: Call to undefined function e()".
- *  Jalur utama aplikasi tetap: index.php -> Controller -> Model -> View ini.
- * ============================================================================
- */
-
 // Deteksi akses langsung: URL mengandung /app/views (lewat Controller tidak).
 $__direct = str_contains(
     str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')),
     '/app/views'
 );
 
-/*
- * Default aman (top-level) ---
- * Saat direndah lewat Controller, extract() SUDAH mengisi variabel ini,
- * sehingga `?? []` tidak menimpa data asli. Saat diakses langsung, variabel
- * tetap terdefinisi supaya analisa statis (Intelephense) tidak menandai P1116.
- */
 $profile      = $profile ?? [];
 $statusInfo   = $statusInfo ?? [];
 $programs     = $programs ?? [];

@@ -1,14 +1,5 @@
 <?php
 /**
- * ============================================================================
- *  HIKEPASS - FRONT CONTROLLER (PERTEMUAN 7 - MVC)
- * ============================================================================
- *  Titik masuk aplikasi. File ini hanya:
- *    1. Memuat dataset & controller.
- *    2. Meneruskan request ke Controller.
- *
- *  Tidak ada HTML dan tidak ada logika bisnis di sini.
- *
  *  Alur MVC:
  *      Request -> index.php -> HikePassController -> HikePass (Model) -> View
  * ============================================================================
@@ -21,12 +12,6 @@ require_once __DIR__ . '/app/controllers/HikePassController.php';
 $dataset    = require __DIR__ . '/includes/data.php';
 $controller = new HikePassController($dataset);
 
-/*
- * Routing sederhana:
- *   index.php                  -> index()
- *   index.php?action=filter    -> filter()
- *   index.php?action=show&...  -> show()
- */
 $action = $_GET['action'] ?? 'index';
 $action = is_string($action) ? $action : 'index';
 

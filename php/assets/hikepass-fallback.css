@@ -1,14 +1,4 @@
-/* ============================================================================
-   HIKEPASS - FALLBACK STYLE (PHP)
-   ----------------------------------------------------------------------------
-   File ini berisi gaya dasar HikePass yang tidak bergantung pada Tailwind CDN.
-   Tujuannya: halaman tetap rapi & utuh meskipun CDN Tailwind / FontAwesome
-   tidak dapat diakses (mis. sedang offline).
 
-   Urutan loading:
-     1. ../style.css        -> gaya utama aplikasi HikePass
-     2. assets/hikepass-fallback.css -> cadangan gaya dasar
-   ========================================================================== */
 
 :root {
   --hp-bg: #0f172a;
