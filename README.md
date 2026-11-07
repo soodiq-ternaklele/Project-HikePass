@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # HikePass
 
 Sistem pemesanan tiket pendakian gunung berbasis web. Project ini dibuat untuk memenuhi tugas **Pemrograman Web Pertemuan 1–7**: mulai dari Product Canvas, HTML/CSS responsif, JavaScript/DOM, API, PHP procedural, PHP OOP, sampai arsitektur MVC.
@@ -113,3 +114,7 @@ Target pengujian:
 - Layout 390px tidak memiliki horizontal overflow.
 - Navigasi mobile dapat berpindah tab.
 - Booking, pembayaran, e-ticket, ranger, dan admin berjalan tanpa error.
+=======
+# Pem.WEB-HikePass
+Pemograman web project kelas K
+>>>>>>> dd07faac101570ff5a2ac76dc43cb4ce90d28d07
