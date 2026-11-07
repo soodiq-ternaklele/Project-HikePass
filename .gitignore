@@ -1,0 +1,12 @@
+# Dependency / generated folders
+node_modules/
+.expo/
+package-lock.json
+
+# Materi PPT berukuran besar (tidak perlu masuk repository)
+PPT/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.local

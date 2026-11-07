@@ -1,0 +1,58 @@
+[
+  {
+    "id": "G1",
+    "nama": "Gunung Semeru",
+    "jalur": "Ranu Pane",
+    "lokasi": "Lumajang, Jawa Timur",
+    "ketinggian": "3.676 MDPL",
+    "harga": 25000,
+    "kuotaMaks": 100,
+    "sisaKuota": 45,
+    "status": "Open",
+    "gambar": "https://images.unsplash.com/photo-1589553460730-57f97022d4f2?auto=format&fit=crop&w=600&q=80",
+    "deskripsi": "Atap pulau Jawa dengan keindahan Danau Ranu Kumbolo dan Puncak Mahameru.",
+    "persyaratan": ["Surat Keterangan Sehat", "Fotokopi KTP", "Peralatan Standar Pendakian"]
+  },
+  {
+    "id": "G2",
+    "nama": "Gunung Rinjani",
+    "jalur": "Sembalun",
+    "lokasi": "Lombok, NTB",
+    "ketinggian": "3.726 MDPL",
+    "harga": 50000,
+    "kuotaMaks": 80,
+    "sisaKuota": 12,
+    "status": "Open",
+    "gambar": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=600&q=80",
+    "deskripsi": "Dikenal dengan keindahan Danau Segara Anak dan sabana Sembalun yang membentang.",
+    "persyaratan": ["Surat Keterangan Sehat", "Kartu Identitas Diri", "Deposit Bebas Sampah"]
+  },
+  {
+    "id": "G3",
+    "nama": "Gunung Gede",
+    "jalur": "Cibodas",
+    "lokasi": "Cianjur, Jawa Barat",
+    "ketinggian": "2.958 MDPL",
+    "harga": 30000,
+    "kuotaMaks": 150,
+    "sisaKuota": 0,
+    "status": "Closed",
+    "gambar": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
+    "deskripsi": "Jalur favorit pendaki dengan pemandangan Telaga Warna dan Alun-alun Suryakencana.",
+    "persyaratan": ["Surat Keterangan Sehat", "KTP/SIM/Kartu Pelajar"]
+  },
+  {
+    "id": "G4",
+    "nama": "Gunung Prau",
+    "jalur": "Patak Banteng",
+    "lokasi": "Wonosobo, Jawa Tengah",
+    "ketinggian": "2.565 MDPL",
+    "harga": 20000,
+    "kuotaMaks": 120,
+    "sisaKuota": 65,
+    "status": "Open",
+    "gambar": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80",
+    "deskripsi": "Pemandangan golden sunrise terbaik se-Asia Tenggara dengan bukit teletubbies.",
+    "persyaratan": ["Surat Keterangan Sehat", "Fotokopi KTP"]
+  }
+]

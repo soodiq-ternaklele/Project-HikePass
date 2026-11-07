@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HikePass – Sistem Pemesanan Tiket Pendakian Online</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts (Inter) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Library QR Code Generator -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  
+  <!-- Custom Style CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col pb-16 md:pb-0">
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        
+        <!-- Logo -->
+        <button type="button" class="flex items-center space-x-3 text-left" onclick="switchTab('explore')" aria-label="HikePass, kembali ke halaman eksplorasi">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-emerald-500/20">
+            <i class="fa-solid fa-mountain text-slate-900"></i>
+          </div>
+          <div>
+            <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-400 to-teal-200 bg-clip-text text-transparent">HikePass</span>
+            <span class="hidden sm:inline-block text-xs text-slate-400 block -mt-1 font-medium">Sistem Pendakian Terpadu</span>
+          </div>
+        </button>
+
+        <!-- Navigation Tabs (Role: Pendaki) -->
+        <nav id="nav-pendaki" class="hidden md:flex items-center space-x-1">
+          <button onclick="switchTab('explore')" id="tab-explore" class="nav-btn active">
+            <i class="fa-solid fa-compass mr-2"></i>Eksplorasi Gunung
+          </button>
+          <button onclick="switchTab('kuota')" id="tab-kuota" class="nav-btn">
+            <i class="fa-solid fa-chart-pie mr-2"></i>Cek Kuota & Jadwal
+          </button>
+          <button onclick="switchTab('booking')" id="tab-booking" class="nav-btn">
+            <i class="fa-solid fa-ticket mr-2"></i>Pesan Tiket
+          </button>
+          <button onclick="switchTab('riwayat')" id="tab-riwayat" class="nav-btn">
+            <i class="fa-solid fa-clock-rotate-left mr-2"></i>Riwayat
+          </button>
+        </nav>
+
+        <!-- Role Selector Dropdown -->
+        <div class="flex items-center space-x-3">
+          <div class="relative">
+            <select id="role-selector" onchange="changeRole(this.value)" class="bg-slate-800 border border-slate-700 text-emerald-400 text-xs sm:text-sm rounded-lg px-3 py-2 font-semibold focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer">
+              <option value="pendaki">🧑‍🌾 Mode: Pendaki</option>
+              <option value="ranger">🛡️ Mode: Ranger Pos</option>
+              <option value="admin">⚙ Mode: Admin Pengelola</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTAINER ================= -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- 1. VIEW: EKSPLORASI GUNUNG -->
+    <section id="view-explore" class="view-section active">
+      <!-- Hero Banner -->
+      <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-slate-800 to-emerald-950 p-8 sm:p-12 mb-8 border border-slate-700/50 shadow-2xl">
+        <div class="relative z-10 max-w-2xl">
+          <span class="inline-block px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold tracking-wide uppercase mb-3 border border-emerald-500/30">
+            <i class="fa-solid fa-shield-halved mr-1"></i> Terintegrasi API & Real-time
+          </span>
+          <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
+            Eksplorasi Gunung Indonesia Secara Online
+          </h1>
+          <p class="text-slate-300 text-base sm:text-lg mb-6">
+            Daftar pendakian, cek kuota real-time, dapatkan e-ticket QR Code, dan verifikasi langsung di pos tanpa antre manual.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <button onclick="switchTab('booking')" class="btn-primary">
+              <i class="fa-solid fa-plus-circle mr-2"></i>Pesan Tiket Sekarang
+            </button>
+            <button onclick="switchTab('kuota')" class="btn-secondary">
+              <i class="fa-solid fa-calendar-days mr-2"></i>Lihat Kuota Hari Ini
+            </button>
+            <button onclick="switchTab('riwayat')" class="btn-secondary">
+              <i class="fa-solid fa-calendar-days mr-2"></i>Riwayat Pendakian
+            </button>
+          </div>
+        </div>
+        <i class="fa-solid fa-mountain-sun absolute -right-8 -bottom-10 text-[200px] text-emerald-500/10 pointer-events-none"></i>
+      </div>
+
+      <!-- Filter / Search & Reload Button -->
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+        <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-mountain text-emerald-400"></i> Jalur Pendakian Populer
+        </h2>
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+          <div class="w-full sm:w-72">
+            <input type="text" id="search-gunung" onkeyup="filterGunung()" placeholder="Cari gunung atau jalur..." class="input-field">
+          </div>
+          <button id="btn-reload-gunung" onclick="fetchGunungData()" title="Muat Ulang Data API" class="btn-secondary px-3 py-2 shrink-0 text-slate-300 hover:text-emerald-400">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Container Dynamic Data / API State Target -->
+      <div id="gunung-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Generatated Dynamically by JS (Loading Spinner / Data / Error Card) -->
+      </div>
+    </section>
+
+    <!-- 2. VIEW: CEK KUOTA & JADWAL -->
+    <section id="view-kuota" class="view-section hidden">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-white mb-2">Cek Kuota & Jadwal Pendakian</h2>
+        <p class="text-slate-400">Pantau ketersediaan kuota harian di setiap jalur pendakian secara langsung.</p>
+      </div>
+
+      <!-- Filter Tanggal & Jalur -->
+      <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 mb-6 flex flex-wrap gap-4 items-center">
+        <div>
+          <label for="filter-kuota-date" class="block text-xs text-slate-400 mb-1 font-medium">Pilih Tanggal Pendakian</label>
+          <input type="date" id="filter-kuota-date" onchange="renderKuotaView()" class="input-field w-auto">
+        </div>
+        <div>
+          <label for="filter-kuota-status" class="block text-xs text-slate-400 mb-1 font-medium">Status Jalur</label>
+          <select id="filter-kuota-status" onchange="renderKuotaView()" class="input-field w-auto">
+            <option value="all">Semua Status</option>
+            <option value="Open">Buka (Open)</option>
+            <option value="Closed">Tutup (Closed)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- List Kuota -->
+      <div id="kuota-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Generated by JS -->
+      </div>
+    </section>
+
+    <!-- 3. VIEW: REGISTRASI & PEMESANAN TIKET (WIZARD) -->
+    <section id="view-booking" class="view-section hidden max-w-3xl mx-auto">
+      <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 sm:p-8 shadow-xl">
+        
+        <!-- Steps Progress Bar -->
+        <div class="flex justify-between items-center mb-8 relative">
+          <div class="absolute top-1/2 left-0 right-0 h-1 bg-slate-700 -translate-y-1/2 z-0"></div>
+          <div id="step-bar" class="absolute top-1/2 left-0 h-1 bg-emerald-500 -translate-y-1/2 transition-all duration-300 z-0" style="width: 0%;"></div>
+
+          <div class="step-node active" id="node-step-1">1</div>
+          <div class="step-node" id="node-step-2">2</div>
+          <div class="step-node" id="node-step-3">3</div>
+        </div>
+
+        <!-- Form Step 1: Pilih Gunung & Tanggal -->
+        <form id="form-step-1" onsubmit="handleNextStep(event, 1)">
+          <h3 class="text-xl font-bold text-white mb-4"><i class="fa-solid fa-map-location-dot text-emerald-400 mr-2"></i>Langkah 1: Pilih Destinasi & Tanggal</h3>
+          
+          <div class="space-y-4">
+            <div>
+              <label for="booking-gunung-id" class="block text-sm font-semibold mb-1">Pilih Gunung & Jalur</label>
+              <select id="booking-gunung-id" onchange="updateBookingPriceCalculations()" class="input-field" required>
+                <!-- Populated by JS -->
+              </select>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="booking-tanggal-naik" class="block text-sm font-semibold mb-1">Tanggal Naik</label>
+                <input type="date" id="booking-tanggal-naik" onchange="updateBookingPriceCalculations()" class="input-field" required>
+              </div>
+              <div>
+                <label for="booking-tanggal-turun" class="block text-sm font-semibold mb-1">Tanggal Turun</label>
+                <input type="date" id="booking-tanggal-turun" class="input-field" required>
+              </div>
+            </div>
+
+            <div>
+              <label for="booking-jumlah-pendaki" class="block text-sm font-semibold mb-1">Jumlah Rombongan (Termasuk Ketua)</label>
+              <input type="number" id="booking-jumlah-pendaki" min="1" max="10" value="1" onchange="generateAnggotaFields(); updateBookingPriceCalculations();" class="input-field" required>
+              <span class="text-xs text-slate-400">*Maksimal 10 orang per kelompok registrasi.</span>
+            </div>
+          </div>
+
+          <div class="mt-8 flex justify-end">
+            <button type="submit" class="btn-primary">
+              Lanjut Isi Data Rombongan <i class="fa-solid fa-arrow-right ml-2"></i>
+            </button>
+          </div>
+        </form>
+
+        <!-- Form Step 2: Data Ketua & Anggota -->
+        <form id="form-step-2" class="hidden" onsubmit="handleNextStep(event, 2)">
+          <h3 class="text-xl font-bold text-white mb-4"><i class="fa-solid fa-users text-emerald-400 mr-2"></i>Langkah 2: Data Ketua & Anggota Pendaki</h3>
+
+          <div class="space-y-6">
+            <!-- Data Ketua -->
+            <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-700">
+              <h4 class="text-md font-bold text-emerald-400 mb-3 flex items-center">
+                <i class="fa-solid fa-user-shield mr-2"></i> Data Ketua Rombongan
+              </h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label for="ketua-nama" class="block text-xs font-medium mb-1">Nama Lengkap (Sesuai KTP)</label>
+                  <input type="text" id="ketua-nama" class="input-field" placeholder="Ahmad Pendaki" required>
+                </div>
+                <div>
+                  <label for="ketua-nik" class="block text-xs font-medium mb-1">No. KTP / NIK</label>
+                  <input type="text" id="ketua-nik" class="input-field" placeholder="3515000000000000" required>
+                </div>
+                <div>
+                  <label for="ketua-hp" class="block text-xs font-medium mb-1">No. WhatsApp / HP</label>
+                  <input type="tel" id="ketua-hp" class="input-field" placeholder="081234567890" required>
+                </div>
+                <div>
+                  <label for="ketua-darurat" class="block text-xs font-medium mb-1">Kontak Darurat (Keluarga)</label>
+                  <input type="tel" id="ketua-darurat" class="input-field" placeholder="089876543210" required>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dynamic Anggota Fields Container -->
+            <div id="anggota-fields-container" class="space-y-4">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <div class="mt-8 flex justify-between">
+            <button type="button" onclick="goToStep(1)" class="btn-secondary">
+              <i class="fa-solid fa-arrow-left mr-2"></i> Kembali
+            </button>
+            <button type="submit" class="btn-primary">
+              Lanjut ke Pembayaran <i class="fa-solid fa-arrow-right ml-2"></i>
+            </button>
+          </div>
+        </form>
+
+        <!-- Form Step 3: Konfirmasi & Rincian Pembayaran -->
+        <div id="form-step-3" class="hidden">
+          <h3 class="text-xl font-bold text-white mb-4"><i class="fa-solid fa-receipt text-emerald-400 mr-2"></i>Langkah 3: Ringkasan Pemesanan & Pembayaran</h3>
+
+          <div id="booking-summary-box" class="bg-slate-900/80 p-5 rounded-xl border border-slate-700 space-y-3 mb-6">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Metode Pembayaran -->
+          <fieldset class="mb-6">
+            <legend class="block text-sm font-semibold mb-2">Pilih Metode Pembayaran</legend>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <label class="payment-option border border-slate-700 p-3 rounded-xl flex items-center gap-2 cursor-pointer bg-slate-900">
+                <input type="radio" name="payment_method" value="QRIS" checked class="text-emerald-500">
+                <span class="text-sm font-medium"><i class="fa-solid fa-qrcode text-emerald-400 mr-1"></i> QRIS</span>
+              </label>
+              <label class="payment-option border border-slate-700 p-3 rounded-xl flex items-center gap-2 cursor-pointer bg-slate-900">
+                <input type="radio" name="payment_method" value="VA BCA" class="text-emerald-500">
+                <span class="text-sm font-medium"><i class="fa-solid fa-building-columns text-blue-400 mr-1"></i> VA BCA</span>
+              </label>
+              <label class="payment-option border border-slate-700 p-3 rounded-xl flex items-center gap-2 cursor-pointer bg-slate-900">
+                <input type="radio" name="payment_method" value="E-Wallet" class="text-emerald-500">
+                <span class="text-sm font-medium"><i class="fa-solid fa-wallet text-orange-400 mr-1"></i> GoPay / OVO</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="flex justify-between">
+            <button type="button" onclick="goToStep(2)" class="btn-secondary">
+              <i class="fa-solid fa-arrow-left mr-2"></i> Kembali
+            </button>
+            <button type="button" onclick="processCheckout()" class="btn-primary bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold">
+              <i class="fa-solid fa-lock mr-2"></i> Bayar Sekarang
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 4. VIEW: RIWAYAT PENDAKIAN -->
+    <section id="view-riwayat" class="view-section hidden">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h2 class="text-2xl font-bold text-white mb-1">Riwayat Tiket Pendakian</h2>
+          <p class="text-slate-400 text-sm">Daftar e-ticket aktif dan tiket yang sudah selesai digunakan.</p>
+        </div>
+      </div>
+
+      <div id="riwayat-list" class="space-y-4">
+        <!-- Generated by JS -->
+      </div>
+    </section>
+
+    <!-- 5. VIEW: RANGER POS (VERIFIKASI TIKET) -->
+    <section id="view-ranger" class="view-section hidden max-w-4xl mx-auto">
+      <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 sm:p-8 shadow-xl">
+        <div class="flex items-center justify-between border-b border-slate-700 pb-4 mb-6">
+          <div>
+            <span class="px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 text-xs font-bold uppercase tracking-wide">
+              <i class="fa-solid fa-shield-halved mr-1"></i> Pos Verifikasi Lapangan
+            </span>
+            <h2 class="text-2xl font-bold text-white mt-2">Scan & Check-In Pendaki</h2>
+          </div>
+          <div class="text-right text-xs text-slate-400">
+            <span>Pos Gardu Pandang</span><br>
+            <span class="text-emerald-400 font-semibold">Online & Ready</span>
+          </div>
+        </div>
+
+        <!-- Form Cari / Scan Tiket -->
+        <div class="flex gap-3 mb-8">
+          <input type="text" id="ranger-search-code" placeholder="Masukkan Kode Booking (Cth: HKP-8921)" class="input-field uppercase font-mono text-lg tracking-wider">
+          <button onclick="searchTicketRanger()" class="btn-primary shrink-0">
+            <i class="fa-solid fa-magnifying-glass mr-2"></i> Verifikasi
+          </button>
+        </div>
+
+        <!-- Result Box -->
+        <div id="ranger-result-container" class="hidden bg-slate-900 rounded-xl p-6 border border-slate-700 space-y-4">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. VIEW: ADMIN PENGELOLA -->
+    <section id="view-admin" class="view-section hidden">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-white mb-1">Panel Pengelola / Admin Pos</h2>
+        <p class="text-slate-400 text-sm">Kelola kuota harian, status buka/tutup jalur, dan rekap pendaki.</p>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+          <div class="text-slate-400 text-xs font-medium uppercase mb-1">Total Tiket Diterbitkan</div>
+          <div id="stat-total-tiket" class="text-3xl font-extrabold text-white">0</div>
+        </div>
+        <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+          <div class="text-slate-400 text-xs font-medium uppercase mb-1">Pendaki Di Atas Gunung</div>
+          <div id="stat-pendaki-naik" class="text-3xl font-extrabold text-amber-400">0</div>
+        </div>
+        <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+          <div class="text-slate-400 text-xs font-medium uppercase mb-1">Pendaki Selesai / Turun</div>
+          <div id="stat-pendaki-turun" class="text-3xl font-extrabold text-emerald-400">0</div>
+        </div>
+      </div>
+
+      <!-- Table Kelola Kuota & Jalur -->
+      <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden mb-8">
+        <div class="p-4 border-b border-slate-700 font-bold text-white flex justify-between items-center">
+          <span><i class="fa-solid fa-sliders text-emerald-400 mr-2"></i>Pengaturan Jalur Pendakian</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-300">
+            <thead class="bg-slate-900 text-xs uppercase text-slate-400 border-b border-slate-700">
+              <tr>
+                <th class="p-4">Gunung & Jalur</th>
+                <th class="p-4">Kuota Maks / Hari</th>
+                <th class="p-4">Sisa Kuota Hari Ini</th>
+                <th class="p-4">Status Jalur</th>
+                <th class="p-4 text-center">Aksi Admin</th>
+              </tr>
+            </thead>
+            <tbody id="admin-table-body" class="divide-y divide-slate-700">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= MOBILE BOTTOM NAVIGATION ================= -->
+  <nav id="mobile-nav" class="md:hidden fixed bottom-0 inset-x-0 z-40 bg-slate-900/95 backdrop-blur-md border-t border-slate-800" aria-label="Navigasi utama mobile">
+    <div class="grid grid-cols-4">
+      <button type="button" class="mobile-nav-btn active" data-tab="explore" onclick="switchTab('explore')" aria-label="Eksplorasi gunung">
+        <i class="fa-solid fa-compass"></i><span>Eksplorasi</span>
+      </button>
+      <button type="button" class="mobile-nav-btn" data-tab="kuota" onclick="switchTab('kuota')" aria-label="Cek kuota dan jadwal">
+        <i class="fa-solid fa-chart-pie"></i><span>Kuota</span>
+      </button>
+      <button type="button" class="mobile-nav-btn" data-tab="booking" onclick="switchTab('booking')" aria-label="Pesan tiket">
+        <i class="fa-solid fa-ticket"></i><span>Pesan</span>
+      </button>
+      <button type="button" class="mobile-nav-btn" data-tab="riwayat" onclick="switchTab('riwayat')" aria-label="Riwayat pendakian">
+        <i class="fa-solid fa-clock-rotate-left"></i><span>Riwayat</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ================= MODAL DETAIL GUNUNG ================= -->
+  <div id="modal-detail" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Detail gunung dan jalur pendakian">
+    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl">
+      <button onclick="closeModal('modal-detail')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+        <i class="fa-solid fa-xmark text-2xl"></i>
+      </button>
+      <div id="modal-detail-content">
+        <!-- Generated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL PEMBAYARAN SIMULASI ================= -->
+  <div id="modal-payment" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="payment-modal-title">
+    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-md w-full p-6 text-center shadow-2xl space-y-4">
+      <div class="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl">
+        <i class="fa-solid fa-qrcode"></i>
+      </div>
+      <h3 id="payment-modal-title" class="text-xl font-bold text-white">Instruksi Pembayaran</h3>
+      <p class="text-xs text-slate-400">Silakan selesaikan simulasi pembayaran tiket Anda.</p>
+      
+      <div class="p-4 bg-white rounded-xl inline-block shadow-inner my-2">
+        <div id="payment-qrcode-target" class="flex justify-center"></div>
+      </div>
+
+      <div class="bg-slate-900 p-3 rounded-lg text-left text-xs space-y-1">
+        <div class="flex justify-between"><span class="text-slate-400">Kode Booking:</span><span id="pay-modal-code" class="font-mono text-emerald-400 font-bold"></span></div>
+        <div class="flex justify-between"><span class="text-slate-400">Total Tagihan:</span><span id="pay-modal-total" class="font-bold text-white"></span></div>
+        <div class="flex justify-between"><span class="text-slate-400">Metode:</span><span id="pay-modal-method" class="text-slate-200"></span></div>
+      </div>
+
+      <div class="pt-2 space-y-2">
+        <button onclick="simulatePaymentSuccess()" class="btn-primary w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black">
+          <i class="fa-solid fa-circle-check mr-2"></i> Konfirmasi Pembayaran Selesai
+        </button>
+        <button onclick="closeModal('modal-payment')" class="btn-secondary w-full text-xs">
+          Batal / Bayar Nanti
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL E-TICKET ================= -->
+  <div id="modal-ticket" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="E-ticket pendakian">
+    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-lg w-full p-6 relative shadow-2xl">
+      <button onclick="closeModal('modal-ticket')" class="absolute top-4 right-4 text-slate-400 hover:text-white print:hidden">
+        <i class="fa-solid fa-xmark text-2xl"></i>
+      </button>
+
+      <!-- Ticket Container for Printing -->
+      <div id="printable-ticket" class="printable-ticket bg-slate-900 p-6 rounded-xl border border-slate-700 text-slate-100 space-y-4">
+        <!-- Generated by JS -->
+      </div>
+
+      <div class="mt-6 flex gap-3 print:hidden">
+        <button onclick="window.print()" class="btn-secondary flex-1">
+          <i class="fa-solid fa-print mr-2"></i> Cetak / Simpan PDF
+        </button>
+        <button onclick="closeModal('modal-ticket'); switchTab('riwayat');" class="btn-primary flex-1">
+          Tutup & Lihat Riwayat
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TOAST NOTIFICATION CONTAINER ================= -->
+  <div id="toast-container" class="fixed bottom-20 md:bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+  <!-- Footer -->
+  <footer class="bg-slate-950 border-t border-slate-800 py-6 mt-12 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4">
+      <p>© 2026 HikePass Inc. Platform Pemesanan Tiket Pendakian Terorganisir.</p>
+    </div>
+  </footer>
+
+  <!-- Custom App Script JS -->
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+<!-- // 1. buatkan  dua tombol dengan inline style
+// 2. tambahkan 2 data sesuai project -->

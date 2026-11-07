@@ -1,0 +1,260 @@
+/* ============================================================================
+   HIKEPASS - FALLBACK STYLE (PHP)
+   ----------------------------------------------------------------------------
+   File ini berisi gaya dasar HikePass yang tidak bergantung pada Tailwind CDN.
+   Tujuannya: halaman tetap rapi & utuh meskipun CDN Tailwind / FontAwesome
+   tidak dapat diakses (mis. sedang offline).
+
+   Urutan loading:
+     1. ../style.css        -> gaya utama aplikasi HikePass
+     2. assets/hikepass-fallback.css -> cadangan gaya dasar
+   ========================================================================== */
+
+:root {
+  --hp-bg: #0f172a;
+  --hp-card: #1e293b;
+  --hp-border: #334155;
+  --hp-text: #f1f5f9;
+  --hp-muted: #94a3b8;
+  --hp-accent: #10b981;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--hp-bg);
+  color: var(--hp-text);
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Container utama */
+.max-w-7xl {
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+/* Grid responsif sederhana */
+.grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.grid-cols-1 { grid-template-columns: 1fr; }
+
+@media (min-width: 640px) {
+  .sm\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .sm\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 768px) {
+  .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .md\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .lg\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .lg\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .lg\:col-span-2 { grid-column: span 2 / span 2; }
+}
+
+@media (min-width: 1280px) {
+  .xl\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Kartu & panel */
+.bg-slate-800 {
+  background-color: var(--hp-card);
+}
+
+.border {
+  border-width: 1px;
+}
+
+.border-slate-700 {
+  border-color: var(--hp-border);
+}
+
+.rounded-xl { border-radius: 0.75rem; }
+.rounded-2xl { border-radius: 1rem; }
+.rounded-lg { border-radius: 0.5rem; }
+.rounded-full { border-radius: 9999px; }
+
+.shadow-xl { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4); }
+.shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); }
+
+.p-4 { padding: 1rem; }
+.p-5 { padding: 1.25rem; }
+.p-6 { padding: 1.5rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-4 { margin-top: 1rem; }
+.mt-6 { margin-top: 1.5rem; }
+.pt-4 { padding-top: 1rem; }
+
+.flex { display: flex; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+.gap-6 { gap: 1.5rem; }
+.flex-col { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-1 { flex: 1 1 0%; }
+.shrink-0 { flex-shrink: 0; }
+.min-w-0 { min-width: 0; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+.overflow-hidden { overflow: hidden; }
+.pointer-events-none { pointer-events: none; }
+.hidden { display: none; }
+
+/* Teks */
+.text-xs { font-size: 0.75rem; }
+.text-sm { font-size: 0.875rem; }
+.text-lg { font-size: 1.125rem; }
+.text-xl { font-size: 1.25rem; }
+.text-2xl { font-size: 1.5rem; }
+.text-3xl { font-size: 1.875rem; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.font-extrabold { font-weight: 800; }
+.font-black { font-weight: 900; }
+.uppercase { text-transform: uppercase; }
+.tracking-wide { letter-spacing: 0.025em; }
+.tracking-tight { letter-spacing: -0.025em; }
+.tracking-widest { letter-spacing: 0.1em; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.leading-none { line-height: 1; }
+.whitespace-nowrap { white-space: nowrap; }
+
+.text-white { color: #ffffff; }
+.text-slate-100 { color: #f1f5f9; }
+.text-slate-200 { color: #e2e8f0; }
+.text-slate-300 { color: #cbd5e1; }
+.text-slate-400 { color: #94a3b8; }
+.text-slate-500 { color: #64748b; }
+.text-emerald-300 { color: #6ee7b7; }
+.text-emerald-400 { color: #34d399; }
+.text-amber-400 { color: #fbbf24; }
+.text-red-400 { color: #f87171; }
+.text-sky-400 { color: #38bdf8; }
+
+/* Latar aksen */
+.bg-emerald-500 { background-color: #10b981; }
+.bg-emerald-500\/15 { background-color: rgba(16, 185, 129, 0.15); }
+.bg-emerald-500\/20 { background-color: rgba(16, 185, 129, 0.2); }
+.bg-amber-500 { background-color: #f59e0b; }
+.bg-amber-500\/15 { background-color: rgba(245, 158, 11, 0.15); }
+.bg-sky-500\/15 { background-color: rgba(14, 165, 233, 0.15); }
+.bg-red-500 { background-color: #ef4444; }
+.bg-red-500\/20 { background-color: rgba(239, 68, 68, 0.2); }
+.bg-slate-700 { background-color: #334155; }
+.bg-slate-900 { background-color: #0f172a; }
+.bg-slate-900\/80 { background-color: rgba(15, 23, 42, 0.8); }
+
+/* Border aksen */
+.border-emerald-500\/30 { border-color: rgba(16, 185, 129, 0.3); }
+.border-emerald-500\/40 { border-color: rgba(16, 185, 129, 0.4); }
+.border-red-500\/30 { border-color: rgba(239, 68, 68, 0.3); }
+
+/* Progress bar */
+.h-1\.5 { height: 0.375rem; }
+.h-2 { height: 0.5rem; }
+.w-full { width: 100%; }
+.bg-slate-700 { background-color: var(--hp-border); }
+.bg-gradient-to-r { background-image: linear-gradient(to right, var(--tw-gradient-stops)); }
+.from-emerald-500 { --tw-gradient-stops: #10b981, #2dd4bf; }
+.to-teal-400 { --tw-gradient-stops: #10b981, #2dd4bf; }
+
+/* Input & tombol (sama seperti style.css utama) */
+.input-field {
+  width: 100%;
+  background-color: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 0.625rem;
+  padding: 0.625rem 0.875rem;
+  color: #f8fafc;
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #059669;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.75rem;
+  border: 0;
+  cursor: pointer;
+}
+
+.btn-primary:hover { background-color: #10b981; }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #334155;
+  color: #f1f5f9;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.75rem;
+  border: 0;
+  cursor: pointer;
+}
+
+/* Navigasi */
+.nav-btn {
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.nav-btn.active {
+  color: #34d399;
+  background-color: #064e3b;
+}
+
+/* Gambar kartu jalur */
+img { display: block; max-width: 100%; }
+.object-cover { object-fit: cover; }
+.w-10 { width: 2.5rem; }
+.h-10 { height: 2.5rem; }
+.w-12 { width: 3rem; }
+.h-12 { height: 3rem; }
+.w-16 { width: 4rem; }
+.h-16 { height: 4rem; }
+.w-24 { width: 6rem; }
+.h-24 { height: 6rem; }
+.w-11 { width: 2.75rem; }
+.h-11 { height: 2.75rem; }
+.h-48 { height: 12rem; }
+
+/* Footer */
+footer { text-align: center; }
